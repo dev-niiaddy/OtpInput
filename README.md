@@ -38,6 +38,7 @@ dependencies {
         app:inputSpacing="10dp"/>
 ```
 
+### Kotlin Code
 ```kotlin
     val otpInput = findViewById<OtpInput>(R.id.otpInput)
 

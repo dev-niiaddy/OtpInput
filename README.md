@@ -2,7 +2,7 @@
 
 Easy to use and highly customizable OTP Input.
 
-<img src="https://i.ibb.co/mv9313B/Screenshot-1600877653.png" alt="Otp Input Android Screenshot" border="0">
+<img src="https://i.ibb.co/mv9313B/Screenshot-1600877653.png" alt="Otp Input Android Screenshot" border="0" height="500">
 
 ## Installation
 Step 1. Add the JitPack repository to your build file

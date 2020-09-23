@@ -3,7 +3,7 @@ package com.godwinaddy.otpinput
 import android.text.Editable
 import android.text.TextWatcher
 
-abstract class TextWatcherAdapter: TextWatcher {
+abstract class TextWatcherAdapter : TextWatcher {
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
     }

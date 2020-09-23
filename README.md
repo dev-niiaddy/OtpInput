@@ -38,12 +38,15 @@ dependencies {
     val otpInput = findViewById<OtpInput>(R.id.otpInput)
 
     // listener for all input fields completed
-    otpInput.onInputFinishedListener {
-        Log.d("Input Finished", it)
+    otpInput.onInputFinishedListener { otpText ->
+        Log.d("Input Finished", otpText)
     }
     
     // function to focus the OtnInput and show keyboard
     otpInput.focusOtpInput()
+
+    //get entered otp text input
+    otpInput.otpText
 ```
 
 ## XML Attributes

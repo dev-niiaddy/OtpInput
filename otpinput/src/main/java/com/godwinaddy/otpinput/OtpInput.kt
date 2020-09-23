@@ -1,7 +1,6 @@
 package com.godwinaddy.otpinput
 
 import android.content.Context
-import android.graphics.Typeface
 import android.text.Editable
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -11,7 +10,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.core.view.children
-import androidx.core.view.doOnAttach
 
 
 class OtpInput : LinearLayout {

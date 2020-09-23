@@ -1,2 +1,3 @@
+include ':otpinput'
 include ':app'
 rootProject.name = "OTP Input"

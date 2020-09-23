@@ -1,8 +1,9 @@
-package com.godwinaddy.otpinput
+package com.godwinaddy.example
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import com.godwinaddy.otpinput.OtpInput
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

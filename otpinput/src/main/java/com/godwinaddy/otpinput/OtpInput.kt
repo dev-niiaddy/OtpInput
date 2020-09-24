@@ -12,7 +12,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.children
 
 
-class OtpInput : LinearLayout {
+class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
 
     private val listOfEditables = mutableListOf<EditText>()
@@ -37,19 +37,8 @@ class OtpInput : LinearLayout {
             return s
         }
 
-    constructor(context: Context) : super(context) {
-        init(context, null)
-    }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context, attrs)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, def: Int) : super(context, attrs, def) {
-        init(context, attrs)
-    }
-
-    private fun init(context: Context, attrs: AttributeSet?) {
+    init {
         inflate(context, R.layout.otp_input, this)
 
         if (attrs != null) {
@@ -131,6 +120,7 @@ class OtpInput : LinearLayout {
             this.addView(inputView)
         }
     }
+
 
     /*
     * measure and resize input card views based on spacing and layout width*/

@@ -2,7 +2,9 @@ package com.godwinaddy.otpinput
 
 import android.content.Context
 import android.text.Editable
+import android.text.InputType
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -10,10 +12,15 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.core.view.children
+import kotlin.properties.Delegates
 
 
 class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
+    internal enum class OtpInputType(val type: Int) {
+        NUMBER_DECIMAL(1),
+        NUMBER_HIDDEN(2)
+    }
 
     private val listOfEditables = mutableListOf<EditText>()
     private var inputCount = 4
@@ -24,18 +31,10 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
     private var textColor: Int = 0
     private var textSize: Int = 0
     private var textStyle: Int = 0
+    private var inputType by Delegates.notNull<Int>()
 
     val otpText: String
-        get() {
-
-            var s = ""
-
-            for (i in listOfEditables) {
-                s += i.text.toString()
-            }
-
-            return s
-        }
+        get() = listOfEditables.joinToString(separator = "") { it.text.toString() }
 
 
     init {
@@ -86,6 +85,8 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
                 0
             )
 
+            inputType = typedArray.getInt(R.styleable.OtpInput_inputType, OtpInputType.NUMBER_DECIMAL.type)
+
             typedArray.recycle()
         }
 
@@ -104,6 +105,15 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
             editText.setTextColor(textColor)
             editText.setTypeface(editText.typeface, textStyle)
 
+            Log.e("Input Type:", inputType.toString())
+            when(inputType){
+                OtpInputType.NUMBER_DECIMAL.type -> {
+                    editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                }
+                OtpInputType.NUMBER_HIDDEN.type -> {
+                    editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+                }
+            }
             editText.addTextChangedListener(object : TextWatcherAdapter() {
 
                 override fun afterTextChanged(s: Editable) {

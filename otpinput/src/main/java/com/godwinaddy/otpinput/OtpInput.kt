@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.core.view.children
+import androidx.core.widget.addTextChangedListener
 
 
 class OtpInput : LinearLayout {
@@ -26,16 +27,7 @@ class OtpInput : LinearLayout {
     private var textStyle: Int = 0
 
     val otpText: String
-        get() {
-
-            var s = ""
-
-            for (i in listOfEditables) {
-                s += i.text.toString()
-            }
-
-            return s
-        }
+        get() = listOfEditables.joinToString { it.text.toString() }
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -196,5 +188,9 @@ class OtpInput : LinearLayout {
                 }
             }
         })
+    }
+
+    internal fun EditText.afterTextChangedListener(afterTextChanged: (String) -> Unit) {
+        addTextChangedListener { afterTextChanged(it!!.toString()) }
     }
 }

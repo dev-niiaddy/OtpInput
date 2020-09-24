@@ -17,7 +17,7 @@ import kotlin.properties.Delegates
 
 class OtpInput : LinearLayout {
 
-    enum class OtpInputType(val type: Int) {
+    internal enum class OtpInputType(val type: Int) {
         NUMBER_DECIMAL(1),
         NUMBER_HIDDEN(2)
     }

@@ -26,16 +26,7 @@ class OtpInput : LinearLayout {
     private var textStyle: Int = 0
 
     val otpText: String
-        get() {
-
-            var s = ""
-
-            for (i in listOfEditables) {
-                s += i.text.toString()
-            }
-
-            return s
-        }
+        get() = listOfEditables.joinToString { it.text.toString() }
 
     constructor(context: Context) : super(context) {
         init(context, null)

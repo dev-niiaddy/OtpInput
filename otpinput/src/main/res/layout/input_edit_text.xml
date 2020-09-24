@@ -19,7 +19,6 @@
         android:focusableInTouchMode="true"
         android:imeOptions="actionNext"
         android:importantForAutofill="no"
-        android:inputType="numberDecimal"
         android:textSize="28sp" />
 
 </androidx.cardview.widget.CardView>

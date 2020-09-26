@@ -15,7 +15,7 @@ import androidx.core.view.children
 import kotlin.properties.Delegates
 
 
-class OtpInput : LinearLayout {
+class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
     internal enum class OtpInputType(val type: Int) {
         NUMBER_DECIMAL(1),
@@ -34,21 +34,10 @@ class OtpInput : LinearLayout {
     private var inputType by Delegates.notNull<Int>()
 
     val otpText: String
-        get() = listOfEditables.joinToString { it.text.toString() }
+        get() = listOfEditables.joinToString(separator = "") { it.text.toString() }
 
-    constructor(context: Context) : super(context) {
-        init(context, null)
-    }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context, attrs)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, def: Int) : super(context, attrs, def) {
-        init(context, attrs)
-    }
-
-    private fun init(context: Context, attrs: AttributeSet?) {
+    init {
         inflate(context, R.layout.otp_input, this)
 
         if (attrs != null) {
@@ -141,6 +130,7 @@ class OtpInput : LinearLayout {
             this.addView(inputView)
         }
     }
+
 
     /*
     * measure and resize input card views based on spacing and layout width*/

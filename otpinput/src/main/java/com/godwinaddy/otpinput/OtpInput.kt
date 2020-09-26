@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import kotlin.properties.Delegates
 
@@ -48,7 +49,7 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
             inputBackground =
                 typedArray.getColor(
                     R.styleable.OtpInput_inputBackground,
-                    resources.getColor(android.R.color.transparent)
+                    ContextCompat.getColor(context, android.R.color.transparent)
                 )
 
             inputSpacing = typedArray.getDimensionPixelSize(R.styleable.OtpInput_inputSpacing, 20)
@@ -66,7 +67,7 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
 
             textColor = typedArray.getColor(
                 R.styleable.OtpInput_android_textColor,
-                resources.getColor(android.R.color.black)
+                ContextCompat.getColor(context, android.R.color.black)
             )
 
             val defaultTextSize = TypedValue

@@ -6,10 +6,10 @@
         <attr name="inputCount" format="integer"/>
         <attr name="inputRadius" format="dimension"/>
         <attr name="inputType" format="enum">
-            <enum name="numberDecimal" value="1" />
+            <enum name="number" value="1" />
             <enum name="numberPassword" value="2" />
         </attr>
-        <attr name="android:textSize" format="dimension"/>
+        <attr name="android:textSize"/>
         <attr name="android:textColor"/>
         <attr name="android:textStyle"/>
     </declare-styleable>

@@ -99,5 +99,10 @@ dependencies {
     <td>dimension</td>
     <td>Space to create in between input fields</td>
   </tr>
+  <tr>
+    <td> app:inputType="numberPassword"</td>
+    <td>enum</td>
+    <td>Specify Input Type to use. ```number``` or ```numberPassword```</td>
+  </tr>
 </tbody>
 </table>

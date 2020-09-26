@@ -4,7 +4,6 @@ import android.content.Context
 import android.text.Editable
 import android.text.InputType
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -13,13 +12,12 @@ import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import kotlin.properties.Delegates
 
 
-class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+class OtpInput : LinearLayout {
 
     internal enum class OtpInputType(val type: Int) {
-        NUMBER_DECIMAL(1),
+        NUMBER(1),
         NUMBER_HIDDEN(2)
     }
 
@@ -32,63 +30,38 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
     private var textColor: Int = 0
     private var textSize: Int = 0
     private var textStyle: Int = 0
-    private var inputType by Delegates.notNull<Int>()
+    private var inputType: Int = 1
 
     val otpText: String
-        get() = listOfEditables.joinToString(separator = "") { it.text.toString() }
+        get() {
+            return listOfEditables.joinToString(separator = "") {
+                it.text.toString()
+            }
+        }
 
 
-    init {
+    constructor(context: Context) : super(context) {
+        init(context, null)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init(context, attrs)
+    }
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        init(context, attrs)
+    }
+
+
+   private fun init(context: Context, attrs: AttributeSet?) {
         inflate(context, R.layout.otp_input, this)
 
         if (attrs != null) {
-            val typedArray = context.theme
-                .obtainStyledAttributes(attrs, R.styleable.OtpInput, 0, 0)
-
-            inputCount = typedArray.getInt(R.styleable.OtpInput_inputCount, 4)
-            inputBackground =
-                typedArray.getColor(
-                    R.styleable.OtpInput_inputBackground,
-                    ContextCompat.getColor(context, android.R.color.transparent)
-                )
-
-            inputSpacing = typedArray.getDimensionPixelSize(R.styleable.OtpInput_inputSpacing, 20)
-
-            val defaultRadius = TypedValue
-                .applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    8f, resources.displayMetrics
-                ).toInt()
-
-            inputRadius = typedArray.getDimensionPixelSize(
-                R.styleable.OtpInput_inputRadius,
-                defaultRadius
-            )
-
-            textColor = typedArray.getColor(
-                R.styleable.OtpInput_android_textColor,
-                ContextCompat.getColor(context, android.R.color.black)
-            )
-
-            val defaultTextSize = TypedValue
-                .applyDimension(
-                    TypedValue.COMPLEX_UNIT_SP,
-                    12f, resources.displayMetrics
-                ).toInt()
-
-            textSize = typedArray.getDimensionPixelSize(
-                R.styleable.OtpInput_android_textSize,
-                defaultTextSize
-            )
-
-            textStyle = typedArray.getInt(
-                R.styleable.OtpInput_android_textStyle,
-                0
-            )
-
-            inputType = typedArray.getInt(R.styleable.OtpInput_inputType, OtpInputType.NUMBER_DECIMAL.type)
-
-            typedArray.recycle()
+           initAttrs(attrs)
         }
 
         if (inputCount <= 0) {
@@ -106,13 +79,14 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
             editText.setTextColor(textColor)
             editText.setTypeface(editText.typeface, textStyle)
 
-            Log.e("Input Type:", inputType.toString())
-            when(inputType){
-                OtpInputType.NUMBER_DECIMAL.type -> {
-                    editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            when (inputType) {
+                OtpInputType.NUMBER.type -> {
+                    editText.inputType =
+                        InputType.TYPE_CLASS_NUMBER
                 }
                 OtpInputType.NUMBER_HIDDEN.type -> {
-                    editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+                    editText.inputType =
+                        InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
                 }
             }
             editText.addTextChangedListener(object : TextWatcherAdapter() {
@@ -132,6 +106,58 @@ class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, a
         }
     }
 
+    private fun initAttrs(attrs: AttributeSet) {
+        val typedArray = context.theme
+            .obtainStyledAttributes(attrs, R.styleable.OtpInput, 0, 0)
+
+        inputCount = typedArray.getInt(R.styleable.OtpInput_inputCount, 4)
+        inputBackground =
+            typedArray.getColor(
+                R.styleable.OtpInput_inputBackground,
+                ContextCompat.getColor(context, android.R.color.transparent)
+            )
+
+        inputSpacing = typedArray.getDimensionPixelSize(R.styleable.OtpInput_inputSpacing, 20)
+
+        val defaultRadius = TypedValue
+            .applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                8f, resources.displayMetrics
+            ).toInt()
+
+        inputRadius = typedArray.getDimensionPixelSize(
+            R.styleable.OtpInput_inputRadius,
+            defaultRadius
+        )
+
+        textColor = typedArray.getColor(
+            R.styleable.OtpInput_android_textColor,
+            ContextCompat.getColor(context, android.R.color.black)
+        )
+
+        val defaultTextSize = TypedValue
+            .applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                12f, resources.displayMetrics
+            ).toInt()
+
+        textSize = typedArray.getDimensionPixelSize(
+            R.styleable.OtpInput_android_textSize,
+            defaultTextSize
+        )
+
+        textStyle = typedArray.getInt(
+            R.styleable.OtpInput_android_textStyle,
+            0
+        )
+
+        inputType = typedArray.getInt(
+            R.styleable.OtpInput_inputType,
+            OtpInputType.NUMBER.type
+        )
+
+        typedArray.recycle()
+    }
 
     /*
     * measure and resize input card views based on spacing and layout width*/

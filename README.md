@@ -102,7 +102,7 @@ dependencies {
   <tr>
     <td> app:inputType="numberPassword"</td>
     <td>enum</td>
-    <td>Specify Input Type to use. ```number``` or ```numberPassword```</td>
+    <td>Specify Input Type to use. number or numberPassword</td>
   </tr>
 </tbody>
 </table>

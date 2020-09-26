@@ -2,18 +2,26 @@ package com.godwinaddy.otpinput
 
 import android.content.Context
 import android.text.Editable
+import android.text.InputType
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import kotlin.properties.Delegates
 
 
-class OtpInput : LinearLayout {
+class OtpInput(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
+    internal enum class OtpInputType(val type: Int) {
+        NUMBER_DECIMAL(1),
+        NUMBER_HIDDEN(2)
+    }
 
     private val listOfEditables = mutableListOf<EditText>()
     private var inputCount = 4
@@ -24,32 +32,13 @@ class OtpInput : LinearLayout {
     private var textColor: Int = 0
     private var textSize: Int = 0
     private var textStyle: Int = 0
+    private var inputType by Delegates.notNull<Int>()
 
     val otpText: String
-        get() {
+        get() = listOfEditables.joinToString(separator = "") { it.text.toString() }
 
-            var s = ""
 
-            for (i in listOfEditables) {
-                s += i.text.toString()
-            }
-
-            return s
-        }
-
-    constructor(context: Context) : super(context) {
-        init(context, null)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context, attrs)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, def: Int) : super(context, attrs, def) {
-        init(context, attrs)
-    }
-
-    private fun init(context: Context, attrs: AttributeSet?) {
+    init {
         inflate(context, R.layout.otp_input, this)
 
         if (attrs != null) {
@@ -60,7 +49,7 @@ class OtpInput : LinearLayout {
             inputBackground =
                 typedArray.getColor(
                     R.styleable.OtpInput_inputBackground,
-                    resources.getColor(android.R.color.transparent)
+                    ContextCompat.getColor(context, android.R.color.transparent)
                 )
 
             inputSpacing = typedArray.getDimensionPixelSize(R.styleable.OtpInput_inputSpacing, 20)
@@ -78,7 +67,7 @@ class OtpInput : LinearLayout {
 
             textColor = typedArray.getColor(
                 R.styleable.OtpInput_android_textColor,
-                resources.getColor(android.R.color.black)
+                ContextCompat.getColor(context, android.R.color.black)
             )
 
             val defaultTextSize = TypedValue
@@ -96,6 +85,8 @@ class OtpInput : LinearLayout {
                 R.styleable.OtpInput_android_textStyle,
                 0
             )
+
+            inputType = typedArray.getInt(R.styleable.OtpInput_inputType, OtpInputType.NUMBER_DECIMAL.type)
 
             typedArray.recycle()
         }
@@ -115,6 +106,15 @@ class OtpInput : LinearLayout {
             editText.setTextColor(textColor)
             editText.setTypeface(editText.typeface, textStyle)
 
+            Log.e("Input Type:", inputType.toString())
+            when(inputType){
+                OtpInputType.NUMBER_DECIMAL.type -> {
+                    editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                }
+                OtpInputType.NUMBER_HIDDEN.type -> {
+                    editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+                }
+            }
             editText.addTextChangedListener(object : TextWatcherAdapter() {
 
                 override fun afterTextChanged(s: Editable) {
@@ -131,6 +131,7 @@ class OtpInput : LinearLayout {
             this.addView(inputView)
         }
     }
+
 
     /*
     * measure and resize input card views based on spacing and layout width*/

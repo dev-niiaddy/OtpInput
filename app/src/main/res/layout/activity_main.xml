@@ -17,6 +17,7 @@
         android:textStyle="normal"
         app:inputBackground="@color/grey"
         app:inputCount="4"
+        app:inputType="numberPassword"
         app:inputRadius="10dp"
         app:inputSpacing="10dp"
         app:layout_constraintBottom_toBottomOf="parent"

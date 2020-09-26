@@ -31,6 +31,7 @@ dependencies {
         android:layout_height="80dp"
         android:textStyle="normal"
         android:textSize="14sp"
+        app:inputType="number"
         android:textColor="@android:color/white"
         app:inputBackground="@color/colorPrimary"
         app:inputCount="4"
@@ -100,9 +101,9 @@ dependencies {
     <td>Space to create in between input fields</td>
   </tr>
   <tr>
-    <td> app:inputType="numberPassword"</td>
-    <td>enum</td>
-    <td>Specify Input Type to use. `number` or `numberPassword`</td>
+    <td>app:inputType</td>
+    <td>number | numberPassword</td>
+    <td>Specify Input Type to use.</td>
   </tr>
 </tbody>
 </table>

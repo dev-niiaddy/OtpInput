@@ -48,6 +48,11 @@ dependencies {
         Log.d("Input Finished", otpText)
     }
     
+    // listener for otpInput Text Changed with completed status
+    otpInput.inputChangedListener { inputComplete, otpText ->
+        Log.d("Input Finished", otpText)
+    }
+
     // function to focus the OtnInput and show keyboard
     otpInput.focusOtpInput()
 

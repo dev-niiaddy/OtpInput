@@ -57,11 +57,11 @@ class OtpInput : LinearLayout {
     }
 
 
-   private fun init(context: Context, attrs: AttributeSet?) {
+    private fun init(context: Context, attrs: AttributeSet?) {
         inflate(context, R.layout.otp_input, this)
 
         if (attrs != null) {
-           initAttrs(attrs)
+            initAttrs(attrs)
         }
 
         if (inputCount <= 0) {
@@ -213,6 +213,17 @@ class OtpInput : LinearLayout {
             firstInput.clearFocus()
             firstInput.demandFocus()
         }, 100)
+    }
+
+    /*Takes a function which accepts the {inputComplete} boolean and current {otpText}*/
+    fun inputChangedListener(onChanged: (inputComplete: Boolean, otpText: String) -> Unit) {
+        listOfEditables.forEach {
+            it.addTextChangedListener(object : TextWatcherAdapter() {
+                override fun afterTextChanged(s: Editable) {
+                        onChanged(otpText.length == inputCount, otpText)
+                }
+            })
+        }
     }
 
     fun onInputFinishedListener(onInputFinished: (String) -> Unit) {

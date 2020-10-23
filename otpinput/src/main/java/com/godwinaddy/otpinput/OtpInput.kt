@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 
 
-class OtpInput : LinearLayout {
+open class OtpInput : LinearLayout {
 
     internal enum class OtpInputType(val type: Int) {
         NUMBER(1),

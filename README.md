@@ -58,6 +58,9 @@ dependencies {
 
     //get entered otp text input
     otpInput.otpText
+
+    //reset or clear input
+    otpInput.reset()
 ```
 
 ## XML Attributes

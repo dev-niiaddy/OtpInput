@@ -235,4 +235,10 @@ open class OtpInput : LinearLayout {
             }
         })
     }
+
+    fun reset() {
+        listOfEditables.forEach {
+            it.setText("")
+        }
+    }
 }

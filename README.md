@@ -17,7 +17,7 @@ allprojects {
 Step 2. Add the dependency
 ```gradle
 dependencies {
-        implementation 'com.github.dev-niiaddy:OtpInput:1.0.3'
+        implementation 'com.github.dev-niiaddy:OtpInput:1.0.5'
 }
 ```
 

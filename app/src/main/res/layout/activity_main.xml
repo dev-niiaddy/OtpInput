@@ -20,8 +20,6 @@
         android:cursorVisible="true"
         android:hint="****"
         app:inputType="numberPassword"
-        app:borderColor="@color/colorPrimary"
-        app:borderWidth="1dp"
         app:inputRadius="10dp"
         app:inputSpacing="10dp"
         app:layout_constraintBottom_toBottomOf="parent"

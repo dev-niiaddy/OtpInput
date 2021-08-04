@@ -5,6 +5,8 @@
         <attr name="inputBackground" format="color"/>
         <attr name="inputCount" format="integer"/>
         <attr name="inputRadius" format="dimension"/>
+        <attr name="borderColor" format="color"/>
+        <attr name="borderWidth" format="dimension"/>
         <attr name="inputType" format="enum">
             <enum name="number" value="1" />
             <enum name="numberPassword" value="2" />
@@ -12,5 +14,8 @@
         <attr name="android:textSize"/>
         <attr name="android:textColor"/>
         <attr name="android:textStyle"/>
+        <attr name="android:hint"/>
+        <attr name="android:textColorHint"/>
+        <attr name="android:cursorVisible"/>
     </declare-styleable>
 </resources>

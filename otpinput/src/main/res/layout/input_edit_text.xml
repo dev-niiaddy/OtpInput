@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="@dimen/default_corner_radius"
-    app:cardElevation="0dp">
+    app:cardElevation="0dp"
+    app:strokeWidth="3dp"
+    app:strokeColor="@android:color/black">
 
     <EditText
-        tools:text="8"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:maxLength="1"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:gravity="center"
         android:imeOptions="actionNext"
         android:importantForAutofill="no"
-        android:textSize="28sp" />
+        android:maxLength="1"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        tools:text="8" />
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -5,13 +5,16 @@ import android.text.Editable
 import android.text.InputType
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.KeyEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import com.google.android.material.card.MaterialCardView
 
 
 open class OtpInput : LinearLayout {
@@ -21,22 +24,42 @@ open class OtpInput : LinearLayout {
         NUMBER_HIDDEN(2)
     }
 
-    private val listOfEditables = mutableListOf<EditText>()
-    private var inputCount = 4
+    private val mListOfEditables = mutableListOf<EditText>()
+    private var mInputCount = 4
 
-    private var inputBackground: Int = 0
-    private var inputSpacing = 15
-    private var inputRadius = 20
-    private var textColor: Int = 0
-    private var textSize: Int = 0
-    private var textStyle: Int = 0
-    private var inputType: Int = 1
+    private var mInputBackground: Int = 0
+    private var mInputSpacing = 15
+    private var mInputRadius = 20
+    private var mTextColor: Int = 0
+    private var mTextSize: Int = 0
+    private var mTextStyle: Int = 0
+    private var mInputType: Int = 1
+
+    private var mBorderColor: Int = -1
+    private var mBorderWidth: Int = 0
+    private var mCursorVisibility = true
+    private var mHintText = ""
+    private var mHintColor: Int = -1
 
     val otpText: String
         get() {
-            return listOfEditables.joinToString(separator = "") {
+            return mListOfEditables.joinToString(separator = "") {
                 it.text.toString()
             }
+        }
+
+    var isCursorVisible: Boolean
+        set(value) {
+            mListOfEditables.forEach {
+                it.isCursorVisible = value
+            }
+        }
+        get() {
+            val sum = mListOfEditables.sumBy {
+                if (it.isCursorVisible) 1 else 0
+            }
+
+            return sum == mListOfEditables.size
         }
 
 
@@ -64,22 +87,23 @@ open class OtpInput : LinearLayout {
             initAttrs(attrs)
         }
 
-        if (inputCount <= 0) {
-            throw RuntimeException("Input count cannot be $inputCount. Use one or greater")
+        if (mInputCount <= 0) {
+            throw RuntimeException("Input count cannot be $mInputCount. Use one or greater")
         }
 
 
-        for (i in 1..inputCount) {
-            val inputView = inflate(context, R.layout.input_edit_text, null) as CardView
-            inputView.radius = inputRadius.toFloat()
+        for (i in 1..mInputCount) {
+            val inputView = inflate(context, R.layout.input_edit_text, null) as MaterialCardView
+            inputView.radius = mInputRadius.toFloat()
 
             val editText = inputView.getChildAt(0) as EditText
-            editText.setBackgroundColor(inputBackground)
-            editText.textSize = textSize.toFloat()
-            editText.setTextColor(textColor)
-            editText.setTypeface(editText.typeface, textStyle)
+            editText.setBackgroundColor(mInputBackground)
+            editText.textSize = mTextSize.toFloat()
+            editText.setTextColor(mTextColor)
+            editText.setTypeface(editText.typeface, mTextStyle)
+            editText.hint = mHintText.getOrNull(i - 1)?.toString() ?: ""
 
-            when (inputType) {
+            when (mInputType) {
                 OtpInputType.NUMBER.type -> {
                     editText.inputType =
                         InputType.TYPE_CLASS_NUMBER
@@ -89,6 +113,7 @@ open class OtpInput : LinearLayout {
                         InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
                 }
             }
+
             editText.addTextChangedListener(object : TextWatcherAdapter() {
 
                 override fun afterTextChanged(s: Editable) {
@@ -99,61 +124,108 @@ open class OtpInput : LinearLayout {
                     }
                 }
             })
+            editText.setOnKeyListener { _, keyCode, event ->
 
-            listOfEditables.add(editText)
+                if (keyCode == KeyEvent.KEYCODE_DEL
+                    && event.action == KeyEvent.ACTION_UP
+                    && editText.textString().isEmpty()
+                ) {
+                    moveBackward(editText)
+                    return@setOnKeyListener true
+                }
+
+                return@setOnKeyListener false
+            }
+
+            if(mBorderColor!= -1) {
+                inputView.strokeColor = mBorderColor
+                inputView.strokeWidth = mBorderWidth
+            }
+
+            if(mHintColor != -1) {
+                editText.setHintTextColor(mHintColor)
+            }
+
+            mListOfEditables.add(editText)
 
             this.addView(inputView)
         }
+
+        isCursorVisible = mCursorVisibility
     }
 
     private fun initAttrs(attrs: AttributeSet) {
         val typedArray = context.theme
             .obtainStyledAttributes(attrs, R.styleable.OtpInput, 0, 0)
 
-        inputCount = typedArray.getInt(R.styleable.OtpInput_inputCount, 4)
-        inputBackground =
-            typedArray.getColor(
-                R.styleable.OtpInput_inputBackground,
-                ContextCompat.getColor(context, android.R.color.transparent)
-            )
+        mInputCount = typedArray.getInt(R.styleable.OtpInput_inputCount, 4)
+        mInputBackground = typedArray.getColor(
+            R.styleable.OtpInput_inputBackground,
+            ContextCompat.getColor(context, android.R.color.transparent)
+        )
 
-        inputSpacing = typedArray.getDimensionPixelSize(R.styleable.OtpInput_inputSpacing, 20)
+        mInputSpacing = typedArray.getDimensionPixelSize(
+            R.styleable.OtpInput_inputSpacing,
+            20,
+        )
 
-        val defaultRadius = TypedValue
-            .applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                8f, resources.displayMetrics
-            ).toInt()
+        val defaultRadius = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            8f, resources.displayMetrics
+        ).toInt()
 
-        inputRadius = typedArray.getDimensionPixelSize(
+        mInputRadius = typedArray.getDimensionPixelSize(
             R.styleable.OtpInput_inputRadius,
             defaultRadius
         )
 
-        textColor = typedArray.getColor(
+        mTextColor = typedArray.getColor(
             R.styleable.OtpInput_android_textColor,
             ContextCompat.getColor(context, android.R.color.black)
         )
 
-        val defaultTextSize = TypedValue
-            .applyDimension(
-                TypedValue.COMPLEX_UNIT_SP,
-                12f, resources.displayMetrics
-            ).toInt()
+        val defaultTextSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            12f, resources.displayMetrics
+        ).toInt()
 
-        textSize = typedArray.getDimensionPixelSize(
+        mTextSize = typedArray.getDimensionPixelSize(
             R.styleable.OtpInput_android_textSize,
             defaultTextSize
         )
 
-        textStyle = typedArray.getInt(
+        mTextStyle = typedArray.getInt(
             R.styleable.OtpInput_android_textStyle,
             0
         )
 
-        inputType = typedArray.getInt(
+        mInputType = typedArray.getInt(
             R.styleable.OtpInput_inputType,
             OtpInputType.NUMBER.type
+        )
+
+        mBorderColor = typedArray.getColor(
+            R.styleable.OtpInput_borderColor,
+            -1
+        )
+
+        mBorderWidth = typedArray.getDimensionPixelSize(
+            R.styleable.OtpInput_borderWidth,
+            0
+        )
+
+        mHintText = typedArray.getString(
+            R.styleable.OtpInput_android_hint
+        ) ?: ""
+
+        typedArray.getColor(
+            R.styleable.OtpInput_android_textColorHint,
+            -1
+        )
+
+        mCursorVisibility = typedArray.getBoolean(
+            R.styleable.OtpInput_android_cursorVisible,
+            true
         )
 
         typedArray.recycle()
@@ -173,29 +245,29 @@ open class OtpInput : LinearLayout {
             val view = it as CardView
 
             val params = view.layoutParams as LayoutParams
-            params.width = ((viewWidth - ((inputCount - 1) * inputSpacing)) / inputCount)
+            params.width = ((viewWidth - ((mInputCount - 1) * mInputSpacing)) / mInputCount)
             params.height = ViewGroup.LayoutParams.MATCH_PARENT
 
             if (view != lastChild) {
-                params.setMargins(0, 0, inputSpacing, 0)
+                params.setMargins(0, 0, mInputSpacing, 0)
             }
         }
     }
 
     private fun moveToNext(editText: EditText) {
-        val currentInput = listOfEditables.indexOf(editText) + 1
+        val currentInput = mListOfEditables.indexOf(editText) + 1
 
-        if (currentInput < listOfEditables.size) {
-            val v = listOfEditables[currentInput]
+        if (currentInput < mListOfEditables.size) {
+            val v = mListOfEditables[currentInput]
             v.demandFocus()
         }
     }
 
     private fun moveBackward(editText: EditText) {
-        val currentInput = listOfEditables.indexOf(editText) - 1
+        val currentInput = mListOfEditables.indexOf(editText) - 1
 
         if (currentInput >= 0) {
-            val v = listOfEditables[currentInput]
+            val v = mListOfEditables[currentInput]
             v.demandFocus()
         }
     }
@@ -207,7 +279,7 @@ open class OtpInput : LinearLayout {
     }
 
     fun focusOtpInput() {
-        val firstInput = listOfEditables.first()
+        val firstInput = mListOfEditables.first()
 
         firstInput.postDelayed({
             firstInput.clearFocus()
@@ -217,19 +289,19 @@ open class OtpInput : LinearLayout {
 
     /*Takes a function which accepts the {inputComplete} boolean and current {otpText}*/
     fun inputChangedListener(onChanged: (inputComplete: Boolean, otpText: String) -> Unit) {
-        listOfEditables.forEach {
+        mListOfEditables.forEach {
             it.addTextChangedListener(object : TextWatcherAdapter() {
                 override fun afterTextChanged(s: Editable) {
-                        onChanged(otpText.length == inputCount, otpText)
+                    onChanged(otpText.length == mInputCount, otpText)
                 }
             })
         }
     }
 
     fun onInputFinishedListener(onInputFinished: (String) -> Unit) {
-        listOfEditables.last().addTextChangedListener(object : TextWatcherAdapter() {
+        mListOfEditables.last().addTextChangedListener(object : TextWatcherAdapter() {
             override fun afterTextChanged(s: Editable) {
-                if (otpText.length == inputCount) {
+                if (otpText.length == mInputCount) {
                     onInputFinished(otpText)
                 }
             }
@@ -237,8 +309,34 @@ open class OtpInput : LinearLayout {
     }
 
     fun reset() {
-        listOfEditables.forEach {
+        mListOfEditables.forEach {
             it.setText("")
+        }
+
+        mListOfEditables.firstOrNull()?.requestFocus()
+    }
+
+    fun setHint(hintText: String) {
+        mListOfEditables.forEachIndexed { index, editText ->
+            editText.hint = hintText.getOrNull(index)?.toString() ?: ""
+        }
+    }
+
+    fun setStrokeColor(@ColorInt color: Int) {
+        mListOfEditables.forEach { editText ->
+            val parent = editText.parent
+            if(parent is MaterialCardView) {
+                parent.strokeColor = color
+            }
+        }
+    }
+
+    fun setStrokeWidth(width: Int) {
+        mListOfEditables.forEach { editText ->
+            val parent = editText.parent
+            if(parent is MaterialCardView) {
+                parent.strokeWidth = width
+            }
         }
     }
 }

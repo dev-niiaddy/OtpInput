@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="@dimen/default_corner_radius"
-    app:cardElevation="0dp"
-    app:strokeWidth="3dp"
-    app:strokeColor="@android:color/black">
+    app:cardElevation="0dp">
 
     <EditText
         android:layout_width="match_parent"

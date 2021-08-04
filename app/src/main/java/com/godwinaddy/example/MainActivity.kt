@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         otpInput.focusOtpInput()
         otpInput.setHint("!#$%@")
-        otpInput.setStrokeWidth(50)
+        otpInput.setStrokeWidth(5)
         otpInput.setStrokeColor(ContextCompat.getColor(this, R.color.colorAccent))
         otpInput.isCursorVisible = false
     }
